@@ -1,11 +1,9 @@
 import { api } from '@/utils/api';
 import { useRouter } from 'next/router';
-import React from 'react';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { type Department } from '@/types';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const FacultyDetailPage = () => {
   const router = useRouter();

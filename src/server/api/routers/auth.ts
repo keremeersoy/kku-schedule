@@ -4,11 +4,13 @@ import { db } from "@/server/db";
 import { z } from "zod";
 
 export const authRouter = createTRPCRouter({
-  hello: publicProcedure.query(() => {
-    return {
-      greeting: `Hello`,
-    };
-  }),
+  hello: publicProcedure
+    .input(z.object({}))
+    .query(({ input }) => {
+      return {
+        greeting: "Hello tRPC",
+      };
+    }),
   registerWithEmailAndPassword: publicProcedure
     .input(
       z.object({

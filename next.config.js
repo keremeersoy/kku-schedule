@@ -19,28 +19,7 @@ const config = {
   },
 
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "originalfavorites.com",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "via.placeholder.com",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "st3.depositphotos.com",
-        pathname: "**",
-      },
-    ],
+    remotePatterns: [],
   },
 
   headers: async () => {

@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -24,7 +23,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { SignInResponse, signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const Login = () => {
@@ -54,7 +53,6 @@ const Login = () => {
         email: email,
         password: password,
         redirect: false,
-        loading: false,
       },
     );
 
@@ -153,7 +151,6 @@ const Login = () => {
           <Link
             href="/register"
             className="text-purple transition-colors hover:text-purple/75"
-            onClick={() => router.push("/register")}
           >
             Kayıt Ol
           </Link>

@@ -2,14 +2,11 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/utils/api";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import type { Department, Faculty } from "@prisma/client";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,

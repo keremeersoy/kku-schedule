@@ -1,4 +1,3 @@
-import React from 'react'
 import { api } from "@/utils/api";
 import MaxWidthWrapperWithoutFlex from "../max-width-wrapper-without-flex";
 import { ReloadIcon } from "@radix-ui/react-icons";
@@ -52,9 +51,6 @@ const AllFacultiesArea = () => {
 
               {faculty.departments && faculty.departments.length > 0 ? (
                 <Table>
-                  {/* <TableCaption className="text-sm text-muted-foreground mt-2 mb-1">
-                    {faculty.name} fakültesine ait bölümler
-                  </TableCaption> */}
                   <TableHeader>
                     <TableRow>
                       <TableHead className="font-medium text-muted-foreground">Bölüm Adı</TableHead>

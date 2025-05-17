@@ -54,8 +54,6 @@ const Register = () => {
   const handleRegister = async (data: RegisterSchema) => {
     const { name, surname, email, password } = data;
 
-    console.log("data", data);
-
     const result = await registerMutation.mutateAsync({
       name,
       surname,
@@ -224,7 +222,6 @@ const Register = () => {
           <Link
             href="/login"
             className="text-purple transition-colors hover:text-purple/75"
-            onClick={() => router.push("/login")}
           >
             Giriş Yapın.
           </Link>

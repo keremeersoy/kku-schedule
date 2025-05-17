@@ -7,7 +7,6 @@ import {
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { env } from "@/env";
 import { db } from "@/server/db";
 import bcrypt from "bcryptjs";
 
@@ -26,11 +25,6 @@ declare module "next-auth" {
       email: string;
     };
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**

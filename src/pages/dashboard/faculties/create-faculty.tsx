@@ -5,19 +5,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React from "react";
 import { api } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { School } from "lucide-react";
-import { FormDescription as ShadcnFormDescription } from "@/components/ui/form";
 
 const CreateFacultyPage = () => {
   const router = useRouter();
@@ -73,9 +72,9 @@ const CreateFacultyPage = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Fakülte Adı</FormLabel>
-                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                    <FormDescription className="text-xs text-muted-foreground">
                       Fakültenin tam adını girin (örn: Mühendislik Fakültesi).
-                    </ShadcnFormDescription>
+                    </FormDescription>
                     <FormControl>
                       <Input placeholder="Fakülte adını giriniz" {...field} />
                     </FormControl>

@@ -5,13 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React from "react";
 import { api } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
@@ -25,7 +25,6 @@ import {
 import { type Department } from "@/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen } from "lucide-react";
-import { FormDescription as ShadcnFormDescription } from "@/components/ui/form";
 
 const CreateCoursePage = () => {
   const router = useRouter();
@@ -86,9 +85,9 @@ const CreateCoursePage = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Ders Adı</FormLabel>
-                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                    <FormDescription className="text-xs text-muted-foreground">
                       Dersin tam adını girin (örn: Programlamaya Giriş).
-                    </ShadcnFormDescription>
+                    </FormDescription>
                     <FormControl>
                       <Input placeholder="Ders adını giriniz" {...field} />
                     </FormControl>
@@ -103,9 +102,9 @@ const CreateCoursePage = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Ders Kodu</FormLabel>
-                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                    <FormDescription className="text-xs text-muted-foreground">
                       Dersin benzersiz kodunu girin (örn: CENG101).
-                    </ShadcnFormDescription>
+                    </FormDescription>
                     <FormControl>
                       <Input placeholder="Ders kodunu giriniz" {...field} />
                     </FormControl>
@@ -120,9 +119,9 @@ const CreateCoursePage = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Kredi</FormLabel>
-                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                    <FormDescription className="text-xs text-muted-foreground">
                       Dersin AKTS veya yerel kredi değerini girin.
-                    </ShadcnFormDescription>
+                    </FormDescription>
                     <FormControl>
                       <Input
                         type="number"
@@ -142,9 +141,9 @@ const CreateCoursePage = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Bölüm</FormLabel>
-                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                    <FormDescription className="text-xs text-muted-foreground">
                       Dersin hangi bölüme ait olduğunu seçin.
-                    </ShadcnFormDescription>
+                    </FormDescription>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}

@@ -12,13 +12,11 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Plus, Trash2, Building2 } from "lucide-react";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import type { Classroom } from "@prisma/client";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,

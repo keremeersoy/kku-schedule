@@ -1,5 +1,4 @@
 import AllFacultiesArea from '@/components/faculties/all-faculties-area'
-import React from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { Plus } from 'lucide-react'

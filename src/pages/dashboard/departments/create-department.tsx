@@ -5,13 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React from "react";
 import { api } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
@@ -25,7 +25,6 @@ import {
 import { type Faculty } from "@/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building } from "lucide-react";
-import { FormDescription as ShadcnFormDescription } from "@/components/ui/form";
 
 const CreateDepartmentPage = () => {
   const router = useRouter();
@@ -84,9 +83,9 @@ const CreateDepartmentPage = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Bölüm Adı</FormLabel>
-                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                    <FormDescription className="text-xs text-muted-foreground">
                       Bölümün tam adını girin (örn: Bilgisayar Mühendisliği).
-                    </ShadcnFormDescription>
+                    </FormDescription>
                     <FormControl>
                       <Input placeholder="Bölüm adını giriniz" {...field} />
                     </FormControl>
@@ -101,9 +100,9 @@ const CreateDepartmentPage = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Fakülte</FormLabel>
-                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                    <FormDescription className="text-xs text-muted-foreground">
                       Bölümün hangi fakülteye bağlı olduğunu seçin.
-                    </ShadcnFormDescription>
+                    </FormDescription>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
