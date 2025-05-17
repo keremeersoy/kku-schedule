@@ -23,6 +23,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { type Faculty } from "@/types";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Building } from "lucide-react";
+import { FormDescription as ShadcnFormDescription } from "@/components/ui/form";
 
 const CreateDepartmentPage = () => {
   const router = useRouter();
@@ -59,66 +62,81 @@ const CreateDepartmentPage = () => {
   };
 
   return (
-    <div className="space-y-6 p-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Yeni Bölüm Oluştur</h1>
-        <p className="text-muted-foreground">
-          Fakülteye yeni bir bölüm ekleyin
-        </p>
-      </div>
+    <div className="p-4 md:p-6 lg:p-8">
+      <Card className="w-full">
+        <CardHeader>
+          <div className="flex items-center space-x-3">
+            <Building className="h-7 w-7 text-primary" />
+            <div>
+              <CardTitle className="text-2xl">Yeni Bölüm Oluştur</CardTitle>
+              <CardDescription className="mt-1">
+                Fakülteye yeni bir bölüm ekleyin ve gerekli alanları doldurun.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <Form {...createForm}>
+            <form onSubmit={createForm.handleSubmit(handleCreateDepartment)} className="space-y-8">
+              <FormField
+                control={createForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bölüm Adı</FormLabel>
+                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                      Bölümün tam adını girin (örn: Bilgisayar Mühendisliği).
+                    </ShadcnFormDescription>
+                    <FormControl>
+                      <Input placeholder="Bölüm adını giriniz" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-      <Form {...createForm}>
-        <form onSubmit={createForm.handleSubmit(handleCreateDepartment)} className="space-y-6">
-          <FormField
-            control={createForm.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bölüm Adı</FormLabel>
-                <FormControl>
-                  <Input placeholder="Bölüm adını giriniz" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={createForm.control}
+                name="facultyId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fakülte</FormLabel>
+                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                      Bölümün hangi fakülteye bağlı olduğunu seçin.
+                    </ShadcnFormDescription>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Fakülte seçiniz" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {faculties?.map((faculty: Faculty) => (
+                          <SelectItem key={faculty.id} value={faculty.id}>
+                            {faculty.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={createForm.control}
-            name="facultyId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fakülte</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Fakülte seçiniz" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {faculties?.map((faculty: Faculty) => (
-                      <SelectItem key={faculty.id} value={faculty.id}>
-                        {faculty.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button
-            type="submit"
-            disabled={createDepartmentMutation.isLoading}
-          >
-            {createDepartmentMutation.isLoading ? "Oluşturuluyor..." : "Oluştur"}
-          </Button>
-        </form>
-      </Form>
+              <Button
+                type="submit"
+                disabled={createDepartmentMutation.isLoading}
+                className="w-full md:w-auto"
+              >
+                {createDepartmentMutation.isLoading ? "Oluşturuluyor..." : "Oluştur"}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 };

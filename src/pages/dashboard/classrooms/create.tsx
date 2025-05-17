@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createClassroomSchema, type CreateClassroomSchema } from "@/schemas/classroom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Building2 } from "lucide-react";
 
 export default function CreateClassroomPage() {
@@ -71,102 +71,96 @@ export default function CreateClassroomPage() {
   }
 
   return (
-    <div className="container mx-auto py-10">
-      <div className="max-w-2xl mx-auto">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <Building2 className="h-6 w-6" />
-              <CardTitle>Yeni Sınıf Oluştur</CardTitle>
+    <div className="p-4 md:p-6 lg:p-8">
+      <Card className="w-full">
+        <CardHeader>
+          <div className="flex items-center space-x-3">
+            <Building2 className="h-7 w-7 text-primary" />
+            <div>
+              <CardTitle className="text-2xl">Yeni Sınıf Oluştur</CardTitle>
+              <CardDescription className="mt-1">
+                Yeni bir sınıf ekleyin ve özelliklerini belirtin.
+              </CardDescription>
             </div>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="facultyId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fakülte</FormLabel>
-                      <FormDescription>
-                        Sınıfın bağlı olduğu fakülteyi seçin
-                      </FormDescription>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Fakülte seçin" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {faculties?.map((faculty) => (
-                            <SelectItem key={faculty.id} value={faculty.id}>
-                              {faculty.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Sınıf Adı</FormLabel>
-                      <FormDescription>
-                        Örnek: A101, B203, Lab-1
-                      </FormDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="facultyId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fakülte</FormLabel>
+                    <FormDescription>
+                      Sınıfın bağlı olduğu fakülteyi seçin
+                    </FormDescription>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <Input placeholder="Sınıf adını girin" {...field} />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Fakülte seçin" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      <SelectContent>
+                        {faculties?.map((faculty) => (
+                          <SelectItem key={faculty.id} value={faculty.id}>
+                            {faculty.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="capacity"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Kapasite</FormLabel>
-                      <FormDescription>
-                        Sınıfın maksimum öğrenci kapasitesi
-                      </FormDescription>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Sınıf kapasitesini girin"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value))}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sınıf Adı</FormLabel>
+                    <FormDescription>
+                      Örnek: A101, B203, Lab-1
+                    </FormDescription>
+                    <FormControl>
+                      <Input placeholder="Sınıf adını girin" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <div className="flex gap-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => router.back()}
-                  >
-                    İptal
-                  </Button>
-                  <Button type="submit" disabled={isLoading}>
-                    {isLoading ? "Oluşturuluyor..." : "Oluştur"}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-      </div>
+              <FormField
+                control={form.control}
+                name="capacity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kapasite</FormLabel>
+                    <FormDescription>
+                      Sınıfın maksimum öğrenci kapasitesi
+                    </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Sınıf kapasitesini girin"
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button type="submit" disabled={isLoading} className="w-full md:w-auto">
+                {isLoading ? "Oluşturuluyor..." : "Oluştur"}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

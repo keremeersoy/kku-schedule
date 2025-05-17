@@ -23,6 +23,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { type Department } from "@/types";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { BookOpen } from "lucide-react";
+import { FormDescription as ShadcnFormDescription } from "@/components/ui/form";
 
 const CreateCoursePage = () => {
   const router = useRouter();
@@ -61,99 +64,120 @@ const CreateCoursePage = () => {
   };
 
   return (
-    <div className="space-y-6 p-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Yeni Ders Oluştur</h1>
-        <p className="text-muted-foreground">
-          Bölüme yeni bir ders ekleyin
-        </p>
-      </div>
+    <div className="p-4 md:p-6 lg:p-8">
+      <Card className="w-full">
+        <CardHeader>
+          <div className="flex items-center space-x-3">
+            <BookOpen className="h-7 w-7 text-primary" />
+            <div>
+              <CardTitle className="text-2xl">Yeni Ders Oluştur</CardTitle>
+              <CardDescription className="mt-1">
+                Bölüme yeni bir ders ekleyin ve gerekli alanları doldurun.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <Form {...createForm}>
+            <form onSubmit={createForm.handleSubmit(handleCreateCourse)} className="space-y-8">
+              <FormField
+                control={createForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ders Adı</FormLabel>
+                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                      Dersin tam adını girin (örn: Programlamaya Giriş).
+                    </ShadcnFormDescription>
+                    <FormControl>
+                      <Input placeholder="Ders adını giriniz" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-      <Form {...createForm}>
-        <form onSubmit={createForm.handleSubmit(handleCreateCourse)} className="space-y-6">
-          <FormField
-            control={createForm.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Ders Adı</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ders adını giriniz" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={createForm.control}
+                name="code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ders Kodu</FormLabel>
+                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                      Dersin benzersiz kodunu girin (örn: CENG101).
+                    </ShadcnFormDescription>
+                    <FormControl>
+                      <Input placeholder="Ders kodunu giriniz" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={createForm.control}
-            name="code"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Ders Kodu</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ders kodunu giriniz" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={createForm.control}
+                name="credit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kredi</FormLabel>
+                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                      Dersin AKTS veya yerel kredi değerini girin.
+                    </ShadcnFormDescription>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Kredi sayısını giriniz"
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={createForm.control}
-            name="credit"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Kredi</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Kredi sayısını giriniz"
-                    {...field}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={createForm.control}
+                name="departmentId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bölüm</FormLabel>
+                    <ShadcnFormDescription className="text-xs text-muted-foreground">
+                      Dersin hangi bölüme ait olduğunu seçin.
+                    </ShadcnFormDescription>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Bölüm seçiniz" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {departments?.map((department: Department) => (
+                          <SelectItem key={department.id} value={department.id}>
+                            {department.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={createForm.control}
-            name="departmentId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bölüm</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Bölüm seçiniz" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {departments?.map((department: Department) => (
-                      <SelectItem key={department.id} value={department.id}>
-                        {department.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button
-            type="submit"
-            disabled={createCourseMutation.isLoading}
-          >
-            {createCourseMutation.isLoading ? "Oluşturuluyor..." : "Oluştur"}
-          </Button>
-        </form>
-      </Form>
+              <Button
+                type="submit"
+                disabled={createCourseMutation.isLoading}
+                className="w-full md:w-auto"
+              >
+                {createCourseMutation.isLoading ? "Oluşturuluyor..." : "Oluştur"}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
