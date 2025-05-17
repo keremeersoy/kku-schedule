@@ -11,7 +11,7 @@ import {
     SidebarMenuSubItem,
     SidebarMenuSubButton,
   } from "@/components/ui/sidebar";
-  import { Plus, Book, Folder } from "lucide-react";
+  import { ListPlus, School, Folder, FileText, GraduationCap } from "lucide-react";
   import Link from "next/link";
 
   export function AppSidebar() {
@@ -40,14 +40,14 @@ import {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton>
-                    <Book className="mr-2 h-4 w-4" />
+                    <School className="mr-2 h-4 w-4" />
                     <span>Fakülte</span>
                   </SidebarMenuButton>
                   <SidebarMenuSub>
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton asChild>
                         <Link href="/dashboard/faculties">
-                          <Plus className="mr-2 h-4 w-4" />
+                          <School className="mr-2 h-4 w-4" />
                           <span>Tüm Fakülteler</span>
                         </Link>
                       </SidebarMenuSubButton>
@@ -56,8 +56,41 @@ import {
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton asChild>
                         <Link href="/dashboard/faculties/create-faculty">
-                          <Plus className="mr-2 h-4 w-4" />
+                          <ListPlus className="mr-2 h-4 w-4" />
                           <span>Fakülte Oluştur</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  </SidebarMenuSub>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
+          <SidebarGroup>
+            <SidebarGroupLabel>Bölümler</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton>
+                    <GraduationCap className="mr-2 h-4 w-4" />
+                    <span>Bölüm</span>
+                  </SidebarMenuButton>
+                  <SidebarMenuSub>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton asChild>
+                        <Link href="/dashboard/departments">
+                          <GraduationCap className="mr-2 h-4 w-4" />
+                          <span>Tüm Bölümler</span>
+                        </Link>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton asChild>
+                        <Link href="/dashboard/departments/create-department">
+                          <ListPlus className="mr-2 h-4 w-4" />
+                          <span>Bölüm Oluştur</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
@@ -80,7 +113,7 @@ import {
                     <SidebarMenuSubItem>
                       <SidebarMenuSubButton asChild>
                         <Link href="/dashboard/projects/create">
-                          <Plus className="mr-2 h-4 w-4" />
+                          <FileText className="mr-2 h-4 w-4" />
                           <span>Create Project</span>
                         </Link>
                       </SidebarMenuSubButton>

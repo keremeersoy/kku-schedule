@@ -76,6 +76,7 @@ model Department {
   facultyId  String
   faculty    Faculty  @relation(fields: [facultyId], references: [id])
   courses    Course[]
+  createdAt  DateTime @default(now())
 }
 
 model Project {
