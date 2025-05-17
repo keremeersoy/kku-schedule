@@ -39,9 +39,17 @@ export const facultyRouter = createTRPCRouter({
 
         const faculty = await db.faculty.create({
           data: {
-            userId,
             name: input.name,
+            createdBy: {
+              connect: {
+                id: userId
+              }
+            }
           },
+          include: {
+            createdBy: true,
+            departments: true
+          }
         });
 
         return faculty;
