@@ -75,31 +75,43 @@ model Department {
   createdAt  DateTime   @default(now())
 }
 
+model Course {
+  id               String              @id @default(uuid())
+  name             String
+  code             String
+  credit           Int
+  departmentId     String
+  department       Department          @relation(fields: [departmentId], references: [id])
+  examSchedules    CourseExamSchedule[]
+  examGroups       ExamGroup[]
+  createdAt        DateTime           @default(now())
+}
+
+model CourseExamSchedule {
+  id               String        @id @default(uuid())
+  courseId         String
+  examScheduleId   String
+  student_count    Int
+  exam_duration    Int
+  course           Course        @relation(fields: [courseId], references: [id])
+  examSchedule     ExamSchedule  @relation(fields: [examScheduleId], references: [id])
+
+  @@unique([courseId, examScheduleId])
+}
+
 model ExamSchedule {
-  id                        String     @id @default(uuid())
+  id                        String               @id @default(uuid())
   facultyId                 String
   title                     String
   start_date                DateTime
   end_date                  DateTime
   assistant_count           Int
   max_classes_per_assistant Int
-  created_at                DateTime   @default(now())
-  faculty                   Faculty    @relation(fields: [facultyId], references: [id])
-  courses                   Course[]
+  created_at                DateTime             @default(now())
+  faculty                   Faculty              @relation(fields: [facultyId], references: [id])
+  courses                   CourseExamSchedule[]
   classrooms                Classroom[]
   examGroups                ExamGroup[]
-}
-
-model Course {
-  id               String        @id @default(uuid())
-  name             String
-  student_count    Int
-  exam_duration    Int
-  departmentId     String
-  examScheduleId   String
-  department       Department    @relation(fields: [departmentId], references: [id])
-  examSchedule     ExamSchedule  @relation(fields: [examScheduleId], references: [id])
-  examGroups       ExamGroup[]
 }
 
 model Classroom {
