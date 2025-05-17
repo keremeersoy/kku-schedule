@@ -7,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// NextAuth models
 model Account {
   id                       String  @id @default(cuid())
   userId                   String
@@ -45,7 +44,6 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-
   created_at    DateTime? @default(now())
   faculties     Faculty[] @relation("UserFaculties")
 }
@@ -59,83 +57,76 @@ model VerificationToken {
 }
 
 model Faculty {
-  id   String @id @default(uuid())
-  name String
+  id        String        @id @default(uuid())
+  name      String
   userId    String
-  createdBy User     @relation("UserFaculties", fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-
+  createdBy User          @relation("UserFaculties", fields: [userId], references: [id])
+  createdAt DateTime      @default(now())
   departments Department[]
-  projects    Project[]
+  examSchedules ExamSchedule[]
 }
 
 model Department {
-  id         String   @id @default(uuid())
+  id         String     @id @default(uuid())
   name       String
   facultyId  String
-  faculty    Faculty  @relation(fields: [facultyId], references: [id])
+  faculty    Faculty    @relation(fields: [facultyId], references: [id])
   courses    Course[]
-  createdAt  DateTime @default(now())
+  createdAt  DateTime   @default(now())
 }
 
-model Project {
-  id                      String     @id @default(uuid())
-  facultyId               String
-  title                   String
-  start_date              DateTime
-  end_date                DateTime
-  assistant_count         Int
+model ExamSchedule {
+  id                        String     @id @default(uuid())
+  facultyId                 String
+  title                     String
+  start_date                DateTime
+  end_date                  DateTime
+  assistant_count           Int
   max_classes_per_assistant Int
-  created_at              DateTime  @default(now())
-
-  faculty     Faculty     @relation(fields: [facultyId], references: [id])
-  courses     Course[]
-  classrooms  Classroom[]
-  examGroups  ExamGroup[]
+  created_at                DateTime   @default(now())
+  faculty                   Faculty    @relation(fields: [facultyId], references: [id])
+  courses                   Course[]
+  classrooms                Classroom[]
+  examGroups                ExamGroup[]
 }
 
 model Course {
-  id            String   @id @default(uuid())
-  name          String
-  student_count Int
-  exam_duration Int
-  departmentId  String
-  projectId     String
-
-  department    Department @relation(fields: [departmentId], references: [id])
-  project       Project    @relation(fields: [projectId], references: [id])
-  examGroups    ExamGroup[]
+  id               String        @id @default(uuid())
+  name             String
+  student_count    Int
+  exam_duration    Int
+  departmentId     String
+  examScheduleId   String
+  department       Department    @relation(fields: [departmentId], references: [id])
+  examSchedule     ExamSchedule  @relation(fields: [examScheduleId], references: [id])
+  examGroups       ExamGroup[]
 }
 
 model Classroom {
-  id        String   @id @default(uuid())
-  name      String
-  capacity  Int
-  projectId String
-
-  project   Project         @relation(fields: [projectId], references: [id])
-  examRooms ExamClassroom[]
+  id               String        @id @default(uuid())
+  name             String
+  capacity         Int
+  examScheduleId   String
+  examSchedule     ExamSchedule  @relation(fields: [examScheduleId], references: [id])
+  examRooms        ExamClassroom[]
 }
 
 model ExamGroup {
-  id         String   @id @default(uuid())
-  courseId   String
-  projectId  String
-  exam_date  DateTime
-  start_time DateTime
-  end_time   DateTime
-
-  course     Course   @relation(fields: [courseId], references: [id])
-  project    Project  @relation(fields: [projectId], references: [id])
-  examRooms  ExamClassroom[]
+  id               String        @id @default(uuid())
+  courseId         String
+  examScheduleId   String
+  exam_date        DateTime
+  start_time       DateTime
+  end_time         DateTime
+  course           Course        @relation(fields: [courseId], references: [id])
+  examSchedule     ExamSchedule  @relation(fields: [examScheduleId], references: [id])
+  examRooms        ExamClassroom[]
 }
 
 model ExamClassroom {
-  id            String   @id @default(uuid())
-  examGroupId   String
-  classroomId   String
-
-  examGroup     ExamGroup  @relation(fields: [examGroupId], references: [id])
-  classroom     Classroom  @relation(fields: [classroomId], references: [id])
+  id             String       @id @default(uuid())
+  examGroupId    String
+  classroomId    String
+  examGroup      ExamGroup    @relation(fields: [examGroupId], references: [id])
+  classroom      Classroom    @relation(fields: [classroomId], references: [id])
 }
