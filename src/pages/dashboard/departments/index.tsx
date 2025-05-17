@@ -6,6 +6,15 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import type { Department, Faculty } from "@prisma/client";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface DepartmentWithFaculty extends Department {
   faculty: Faculty;
@@ -41,7 +50,7 @@ const DepartmentsPage = () => {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Bölümler</h1>
           <p className="text-muted-foreground">
@@ -66,25 +75,39 @@ const DepartmentsPage = () => {
           </div>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-10">
           {Object.values(departmentsByFaculty ?? {}).map((group: FacultyGroup) => (
-            <div key={group.faculty.id} className="space-y-4">
-              <h2 className="text-xl font-semibold">{group.faculty.name}</h2>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {group.departments.map((department) => (
-                  <Card key={department.id}>
-                    <CardContent className="p-6">
-                      <div className="flex flex-col space-y-2">
-                        <h3 className="font-semibold">{department.name}</h3>
-                        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                          <span>Oluşturulma:</span>
-                          <span>{new Date(department.createdAt as Date).toLocaleDateString()}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+            <div key={group.faculty.id} className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+              <h2 className="text-2xl font-semibold tracking-tight mb-4 text-primary">{group.faculty.name}</h2>
+              {group.departments.length > 0 ? (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="font-medium text-muted-foreground w-[400px]">Bölüm Adı</TableHead>
+                      <TableHead className="font-medium text-muted-foreground text-right">Oluşturulma Tarihi</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {group.departments.map((department) => (
+                      <TableRow key={department.id} className="hover:bg-muted/50 transition-colors">
+                        <TableCell className="py-3 font-medium">
+                          {/* TODO: Add link to department details if exists /dashboard/departments/${department.id} ? */}
+                          {department.name}
+                        </TableCell>
+                        <TableCell className="py-3 text-right">
+                          {new Date(
+                            department.createdAt as Date
+                          ).toLocaleDateString()}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              ) : (
+                <p className="text-sm text-muted-foreground py-3">
+                  Bu fakülteye ait bölüm bulunmamaktadır.
+                </p>
+              )}
             </div>
           ))}
         </div>

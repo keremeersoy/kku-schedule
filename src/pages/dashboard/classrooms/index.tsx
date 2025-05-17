@@ -12,10 +12,18 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Plus, Trash2, Building2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Card, CardContent } from "@/components/ui/card";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import type { Classroom } from "@prisma/client";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface ClassroomWithFaculty extends Classroom {
   faculty: {
@@ -34,7 +42,6 @@ interface FacultyGroup {
 
 export default function ClassroomsPage() {
   const { toast } = useToast();
-  const router = useRouter();
   const utils = api.useContext();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedClassroom, setSelectedClassroom] = useState<{ id: string; name: string } | null>(null);
@@ -48,6 +55,7 @@ export default function ClassroomsPage() {
       toast({
         title: "Başarılı",
         description: "Sınıf başarıyla silindi",
+        variant: "success"
       });
       setDeleteDialogOpen(false);
       setSelectedClassroom(null);
@@ -85,7 +93,7 @@ export default function ClassroomsPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Sınıflar</h1>
           <p className="text-muted-foreground">
@@ -110,37 +118,52 @@ export default function ClassroomsPage() {
           </div>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-10">
           {(groupedClassrooms as FacultyGroup[]).map((group) => (
-            <div key={group.faculty.id} className="space-y-4">
-              <h2 className="text-xl font-semibold">{group.faculty.name}</h2>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {group.classrooms.map((classroom) => (
-                  <Card key={classroom.id} className="hover:bg-muted/50">
-                    <CardContent className="p-6">
-                      <div className="flex flex-col space-y-2">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <Building2 className="h-4 w-4 text-muted-foreground" />
-                            <h3 className="font-semibold">{classroom.name}</h3>
-                          </div>
+            <div key={group.faculty.id} className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+              <h2 className="text-2xl font-semibold tracking-tight mb-4 text-primary">{group.faculty.name}</h2>
+              {group.classrooms.length > 0 ? (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="font-medium text-muted-foreground w-[300px]">Sınıf Adı</TableHead>
+                      <TableHead className="font-medium text-muted-foreground">Kapasite</TableHead>
+                      <TableHead className="font-medium text-muted-foreground">Oluşturulma Tarihi</TableHead>
+                      <TableHead className="font-medium text-muted-foreground text-right">İşlemler</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {group.classrooms.map((classroom) => (
+                      <TableRow key={classroom.id} className="hover:bg-muted/50 transition-colors">
+                        <TableCell className="py-3 font-medium flex items-center">
+                          <Building2 className="mr-2 h-4 w-4 text-muted-foreground" />
+                          {classroom.name}
+                        </TableCell>
+                        <TableCell className="py-3">{classroom.capacity} Kişi</TableCell>
+                        <TableCell className="py-3">
+                          {new Date(
+                            classroom.createdAt as Date
+                          ).toLocaleDateString("tr-TR")}
+                        </TableCell>
+                        <TableCell className="py-3 text-right">
                           <Button
                             variant="destructive"
-                            size="icon"
+                            size="sm"
                             onClick={() => handleDeleteClick(classroom)}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="mr-1 h-4 w-4" />
+                            Sil
                           </Button>
-                        </div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
-                          <p>Kapasite: {classroom.capacity} Kişi</p>
-                          <p>Oluşturulma: {new Date(classroom.createdAt as Date).toLocaleDateString('tr-TR')}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              ) : (
+                <p className="text-sm text-muted-foreground py-3">
+                  Bu fakülteye ait sınıf bulunmamaktadır.
+                </p>
+              )}
             </div>
           ))}
         </div>

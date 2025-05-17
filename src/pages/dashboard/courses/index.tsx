@@ -6,6 +6,15 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import type { Course } from "@/types";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 type SimplifiedCourse = Pick<Course, 'id' | 'name' | 'code' | 'credit'> & {
   department: {
@@ -65,7 +74,7 @@ const CoursesPage = () => {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dersler</h1>
           <p className="text-muted-foreground">
@@ -90,32 +99,42 @@ const CoursesPage = () => {
           </div>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-10">
           {Object.values(coursesByFacultyAndDepartment ?? {}).map((group: FacultyGroup) => (
-            <div key={group.faculty.name} className="space-y-4">
-              <h2 className="text-xl font-semibold">{group.faculty.name}</h2>
+            <div key={group.faculty.name} className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+              <h2 className="text-2xl font-semibold tracking-tight mb-6 text-primary">{group.faculty.name}</h2>
               {group.departments.map((department) => (
-                <div key={department.name} className="space-y-4">
-                  <h3 className="text-lg font-medium">{department.name}</h3>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {department.courses.map((course) => (
-                      <Card key={course.id}>
-                        <CardContent className="p-6">
-                          <div className="flex flex-col space-y-2">
-                            <div className="flex items-center justify-between">
-                              <h4 className="font-semibold">{course.name}</h4>
-                              <span className="text-sm font-medium text-muted-foreground">
-                                {course.code}
-                              </span>
-                            </div>
-                            <div className="space-y-1 text-sm text-muted-foreground">
-                              <p>Kredi: {course.credit}</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                <div key={department.name} className="mb-6 last:mb-0">
+                  <h3 className="text-xl font-semibold tracking-tight mb-3 text-secondary-foreground">{department.name}</h3>
+                  {department.courses.length > 0 ? (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="font-medium text-muted-foreground w-[300px]">Ders Adı</TableHead>
+                          <TableHead className="font-medium text-muted-foreground">Ders Kodu</TableHead>
+                          <TableHead className="font-medium text-muted-foreground text-right">Kredi</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {department.courses.map((course) => (
+                          <TableRow key={course.id} className="hover:bg-muted/50 transition-colors">
+                            <TableCell className="py-3 font-medium">
+                              {/* TODO: Add link to course details if exists /dashboard/courses/${course.id} ? */}
+                              {course.name}
+                            </TableCell>
+                            <TableCell className="py-3">{course.code}</TableCell>
+                            <TableCell className="py-3 text-right">
+                              {course.credit}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <p className="text-sm text-muted-foreground py-3">
+                      Bu bölüme ait ders bulunmamaktadır.
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
