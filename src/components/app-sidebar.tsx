@@ -13,7 +13,7 @@ import {
     SidebarFooter,
     SidebarSeparator,
   } from "@/components/ui/sidebar";
-import { ListPlus, School, Folder, FileText, GraduationCap, User, LogOut, Moon, Sun, BookOpen } from "lucide-react";
+import { ListPlus, School, Folder, FileText, GraduationCap, User, LogOut, Moon, Sun, BookOpen, Building2 } from "lucide-react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "./ui/button";
@@ -147,6 +147,39 @@ export function AppSidebar() {
                       <Link href="/dashboard/courses/create">
                         <ListPlus className="mr-2 h-4 w-4" />
                         <span>Ders Oluştur</span>
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Sınıflar</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <Building2 className="mr-2 h-4 w-4" />
+                  <span>Sınıf</span>
+                </SidebarMenuButton>
+                <SidebarMenuSub>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild>
+                      <Link href="/dashboard/classrooms">
+                        <Building2 className="mr-2 h-4 w-4" />
+                        <span>Tüm Sınıflar</span>
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild>
+                      <Link href="/dashboard/classrooms/create">
+                        <ListPlus className="mr-2 h-4 w-4" />
+                        <span>Sınıf Oluştur</span>
                       </Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
