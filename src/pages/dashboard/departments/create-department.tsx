@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Faculty } from "@prisma/client";
+import { type Faculty } from "@/types";
 
 const CreateDepartmentPage = () => {
   const router = useRouter();
@@ -44,32 +44,33 @@ const CreateDepartmentPage = () => {
     },
   });
 
-  const createDepartmentMutation = api.department.createDepartment.useMutation();
-
-  const handleCreateDepartment = async (data: CreateDepartmentSchema) => {
-    const result = await createDepartmentMutation.mutateAsync(data);
-
-    if (result) {
+  const createDepartmentMutation = api.department.create.useMutation({
+    onSuccess: () => {
       toast({
-        title: "Successfully created department.",
-        description: "You can access departments from the departments page.",
+        title: "Bölüm başarıyla oluşturuldu",
+        description: "Bölümler sayfasına yönlendiriliyorsunuz",
         variant: "success",
       });
       void router.push("/dashboard/departments");
-    } else {
+    },
+    onError: (error) => {
       toast({
-        title: "An error occurred.",
-        description: "Please try again later.",
+        title: "Bir hata oluştu",
+        description: error.message,
         variant: "destructive",
       });
-    }
+    },
+  });
+
+  const handleCreateDepartment = async (data: CreateDepartmentSchema) => {
+    await createDepartmentMutation.mutateAsync(data);
   };
 
   return (
     <MaxWidthWrapper>
       <Card className="w-full">
         <CardHeader>
-          <CardTitle>Create Department</CardTitle>
+          <CardTitle>Bölüm Oluştur</CardTitle>
         </CardHeader>
 
         <Form {...createForm}>
@@ -80,13 +81,13 @@ const CreateDepartmentPage = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Department Name</FormLabel>
+                    <FormLabel>Bölüm Adı</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         id="name"
                         type="text"
-                        placeholder="Computer Engineering"
+                        placeholder="Bilgisayar Mühendisliği"
                       />
                     </FormControl>
                     <FormMessage />
@@ -99,18 +100,18 @@ const CreateDepartmentPage = () => {
                 name="facultyId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Faculty</FormLabel>
+                    <FormLabel>Fakülte</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a faculty" />
+                          <SelectValue placeholder="Fakülte seçiniz" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {faculties?.map((faculty) => (
+                        {faculties?.map((faculty: Faculty) => (
                           <SelectItem key={faculty.id} value={faculty.id}>
                             {faculty.name}
                           </SelectItem>
@@ -123,8 +124,13 @@ const CreateDepartmentPage = () => {
               />
             </CardContent>
             <CardFooter>
-              <Button className="w-full" variant="success" type="submit">
-                Create Department
+              <Button
+                className="w-full"
+                variant="success"
+                type="submit"
+                disabled={createDepartmentMutation.isLoading}
+              >
+                {createDepartmentMutation.isLoading ? "Oluşturuluyor..." : "Oluştur"}
               </Button>
             </CardFooter>
           </form>

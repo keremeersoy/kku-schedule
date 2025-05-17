@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { createDepartmentSchema } from "@/schemas/department";
+
+const createDepartmentSchema = z.object({
+  name: z.string().min(1, 'Bölüm adı zorunludur'),
+  facultyId: z.string().min(1, 'Fakülte seçimi zorunludur'),
+});
 
 export const departmentRouter = createTRPCRouter({
   getDepartments: protectedProcedure.query(async ({ ctx }) => {
@@ -16,13 +20,16 @@ export const departmentRouter = createTRPCRouter({
     return departments;
   }),
 
-  createDepartment: protectedProcedure
+  create: protectedProcedure
     .input(createDepartmentSchema)
     .mutation(async ({ ctx, input }) => {
       const department = await ctx.db.department.create({
         data: {
           name: input.name,
           facultyId: input.facultyId,
+        },
+        include: {
+          faculty: true,
         },
       });
 

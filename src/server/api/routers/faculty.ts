@@ -7,12 +7,26 @@ export const facultyRouter = createTRPCRouter({
       const faculties = await db.faculty.findMany({
         orderBy: { createdAt: "desc" },
         include: {
-          createdBy: true
+          createdBy: true,
+          departments: true
         },
       });
 
       return faculties;
     }),
+
+    getFacultyById: protectedProcedure
+      .input(z.object({ id: z.string() }))
+      .query(async ({ input }) => {
+        const faculty = await db.faculty.findUnique({
+          where: { id: input.id },
+          include: {
+            departments: true,
+          },
+        });
+
+        return faculty;
+      }),
 
     createFaculty: protectedProcedure
       .input(
