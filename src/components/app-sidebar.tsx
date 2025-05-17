@@ -13,7 +13,7 @@ import {
     SidebarFooter,
     SidebarSeparator,
   } from "@/components/ui/sidebar";
-import { ListPlus, School, Folder, FileText, GraduationCap, User, LogOut, Moon, Sun } from "lucide-react";
+import { ListPlus, School, Folder, FileText, GraduationCap, User, LogOut, Moon, Sun, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "./ui/button";
@@ -114,6 +114,39 @@ export function AppSidebar() {
                       <Link href="/dashboard/departments/create-department">
                         <ListPlus className="mr-2 h-4 w-4" />
                         <span>Bölüm Oluştur</span>
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                </SidebarMenuSub>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Dersler</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  <span>Ders</span>
+                </SidebarMenuButton>
+                <SidebarMenuSub>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild>
+                      <Link href="/dashboard/courses">
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        <span>Tüm Dersler</span>
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild>
+                      <Link href="/dashboard/courses/create">
+                        <ListPlus className="mr-2 h-4 w-4" />
+                        <span>Ders Oluştur</span>
                       </Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
