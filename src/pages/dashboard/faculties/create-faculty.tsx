@@ -1,12 +1,4 @@
-import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { createFacultySchema, type CreateFacultySchema } from "@/schemas/faculty";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,8 +16,7 @@ import { api } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 
-
-const CreateAdvertPage = () => {
+const CreateFacultyPage = () => {
   const router = useRouter();
 
   const createForm = useForm<CreateFacultySchema>({
@@ -57,50 +48,40 @@ const CreateAdvertPage = () => {
   };
 
   return (
-    <MaxWidthWrapper>
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Fakülte Oluştur</CardTitle>
-        </CardHeader>
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Yeni Fakülte Oluştur</h1>
+        <p className="text-muted-foreground">
+          Üniversiteye yeni bir fakülte ekleyin
+        </p>
+      </div>
 
-        <Form {...createForm}>
-          <form onSubmit={createForm.handleSubmit(handleCreateFaculty)}>
-            <CardContent className="flex flex-col space-y-4">
-              <FormField
-                control={createForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fakülte Adı</FormLabel>
+      <Form {...createForm}>
+        <form onSubmit={createForm.handleSubmit(handleCreateFaculty)} className="space-y-6">
+          <FormField
+            control={createForm.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Fakülte Adı</FormLabel>
+                <FormControl>
+                  <Input placeholder="Fakülte adını giriniz" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-                    <FormControl>
-                      <Input
-                        {...field}
-                        id="name"
-                        type="text"
-                        placeholder="Mühendislik Fakültesi"
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-            <CardFooter>
-              <Button
-                className="w-full"
-                variant="success"
-                type="submit"
-              >
-                Fakülte Oluştur
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
-    </MaxWidthWrapper>
+          <Button
+            type="submit"
+            disabled={createFacultyMutation.isLoading}
+          >
+            {createFacultyMutation.isLoading ? "Oluşturuluyor..." : "Oluştur"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 };
 
-export default CreateAdvertPage;
+export default CreateFacultyPage;

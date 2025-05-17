@@ -1,12 +1,4 @@
-import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { createDepartmentSchema, type CreateDepartmentSchema } from "@/schemas/department";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -67,76 +59,67 @@ const CreateDepartmentPage = () => {
   };
 
   return (
-    <MaxWidthWrapper>
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Bölüm Oluştur</CardTitle>
-        </CardHeader>
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Yeni Bölüm Oluştur</h1>
+        <p className="text-muted-foreground">
+          Fakülteye yeni bir bölüm ekleyin
+        </p>
+      </div>
 
-        <Form {...createForm}>
-          <form onSubmit={createForm.handleSubmit(handleCreateDepartment)}>
-            <CardContent className="flex flex-col space-y-4">
-              <FormField
-                control={createForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bölüm Adı</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        id="name"
-                        type="text"
-                        placeholder="Bilgisayar Mühendisliği"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+      <Form {...createForm}>
+        <form onSubmit={createForm.handleSubmit(handleCreateDepartment)} className="space-y-6">
+          <FormField
+            control={createForm.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Bölüm Adı</FormLabel>
+                <FormControl>
+                  <Input placeholder="Bölüm adını giriniz" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-              <FormField
-                control={createForm.control}
-                name="facultyId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fakülte</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Fakülte seçiniz" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {faculties?.map((faculty: Faculty) => (
-                          <SelectItem key={faculty.id} value={faculty.id}>
-                            {faculty.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-            <CardFooter>
-              <Button
-                className="w-full"
-                variant="success"
-                type="submit"
-                disabled={createDepartmentMutation.isLoading}
-              >
-                {createDepartmentMutation.isLoading ? "Oluşturuluyor..." : "Oluştur"}
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
-    </MaxWidthWrapper>
+          <FormField
+            control={createForm.control}
+            name="facultyId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Fakülte</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Fakülte seçiniz" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {faculties?.map((faculty: Faculty) => (
+                      <SelectItem key={faculty.id} value={faculty.id}>
+                        {faculty.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button
+            type="submit"
+            disabled={createDepartmentMutation.isLoading}
+          >
+            {createDepartmentMutation.isLoading ? "Oluşturuluyor..." : "Oluştur"}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 };
 
