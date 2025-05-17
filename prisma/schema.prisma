@@ -57,22 +57,23 @@ model VerificationToken {
 }
 
 model Faculty {
-  id        String        @id @default(uuid())
-  name      String
-  userId    String
-  createdBy User          @relation("UserFaculties", fields: [userId], references: [id])
-  createdAt DateTime      @default(now())
-  departments Department[]
-  examSchedules ExamSchedule[]
+  id              String            @id @default(uuid())
+  name            String
+  userId          String
+  createdBy       User              @relation("UserFaculties", fields: [userId], references: [id])
+  createdAt       DateTime          @default(now())
+  departments     Department[]
+  examSchedules   ExamSchedule[]
+  classrooms      Classroom[]
 }
 
 model Department {
-  id         String     @id @default(uuid())
+  id         String       @id @default(uuid())
   name       String
   facultyId  String
-  faculty    Faculty    @relation(fields: [facultyId], references: [id])
+  faculty    Faculty      @relation(fields: [facultyId], references: [id])
   courses    Course[]
-  createdAt  DateTime   @default(now())
+  createdAt  DateTime     @default(now())
 }
 
 model Course {
@@ -110,7 +111,7 @@ model ExamSchedule {
   created_at                DateTime             @default(now())
   faculty                   Faculty              @relation(fields: [facultyId], references: [id])
   courses                   CourseExamSchedule[]
-  classrooms                Classroom[]
+  classrooms                ExamScheduleClassroom[]
   examGroups                ExamGroup[]
 }
 
@@ -118,9 +119,25 @@ model Classroom {
   id               String        @id @default(uuid())
   name             String
   capacity         Int
-  examScheduleId   String
-  examSchedule     ExamSchedule  @relation(fields: [examScheduleId], references: [id])
+  createdAt        DateTime      @default(now())
+
+  facultyId        String
+  faculty          Faculty       @relation(fields: [facultyId], references: [id])
+
   examRooms        ExamClassroom[]
+  examSchedules    ExamScheduleClassroom[]
+}
+
+model ExamScheduleClassroom {
+  id                 String        @id @default(uuid())
+  examScheduleId     String
+  classroomId        String
+  overriddenCapacity Int?
+
+  examSchedule       ExamSchedule  @relation(fields: [examScheduleId], references: [id])
+  classroom          Classroom     @relation(fields: [classroomId], references: [id])
+
+  @@unique([examScheduleId, classroomId])
 }
 
 model ExamGroup {
