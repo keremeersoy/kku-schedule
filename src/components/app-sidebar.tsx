@@ -41,22 +41,6 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        {/* <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link href="#">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    <span>Calendar</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup> */}
-
         <SidebarGroup>
           <SidebarGroupLabel>Fakülteler</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -190,20 +174,20 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Proje</SidebarGroupLabel>
+          <SidebarGroupLabel>Sınav Takvimleri</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton>
                   <Folder className="mr-2 h-4 w-4" />
-                  <span>Projeler</span>
+                  <span>Sınav Takvimleri</span>
                 </SidebarMenuButton>
                 <SidebarMenuSub>
                   <SidebarMenuSubItem>
                     <SidebarMenuSubButton asChild>
-                      <Link href="/dashboard/projects/create">
+                      <Link href="/dashboard">
                         <FileText className="mr-2 h-4 w-4" />
-                        <span>Create Project</span>
+                        <span>Sınav Takvimi Oluştur</span>
                       </Link>
                     </SidebarMenuSubButton>
                   </SidebarMenuSubItem>
