@@ -35,6 +35,25 @@ export const courseRouter = createTRPCRouter({
       return courses;
     }),
 
+  getCoursesByFacultyId: protectedProcedure
+    .input(z.object({ facultyId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const courses = await ctx.db.course.findMany({
+        where: {
+          department: {
+            facultyId: input.facultyId,
+          },
+        },
+        include: {
+          department: true,
+        },
+        orderBy: {
+          name: "asc",
+        },
+      });
+      return courses;
+    }),
+
   create: protectedProcedure
     .input(createCourseSchema)
     .mutation(async ({ ctx, input }) => {
