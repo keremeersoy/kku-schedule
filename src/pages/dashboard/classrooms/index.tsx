@@ -139,9 +139,7 @@ export default function ClassroomsPage() {
                         </TableCell>
                         <TableCell className="py-3">{classroom.capacity} Kişi</TableCell>
                         <TableCell className="py-3">
-                          {new Date(
-                            classroom.createdAt as Date
-                          ).toLocaleDateString("tr-TR")}
+                        {new Date(classroom.createdAt).toLocaleDateString("tr-TR")}
                         </TableCell>
                         <TableCell className="py-3 text-right">
                           <Button

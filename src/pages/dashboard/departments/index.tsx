@@ -41,7 +41,7 @@ const DepartmentsPage = () => {
         departments: [],
       };
     }
-    acc[facultyId].departments.push(department);
+    acc[facultyId]?.departments?.push(department);
     return acc;
   }, {});
 
@@ -93,7 +93,7 @@ const DepartmentsPage = () => {
                         </TableCell>
                         <TableCell className="py-3 text-right">
                           {new Date(
-                            department.createdAt as Date
+                            department.createdAt
                           ).toLocaleDateString()}
                         </TableCell>
                       </TableRow>

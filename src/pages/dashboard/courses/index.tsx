@@ -56,13 +56,13 @@ const CoursesPage = () => {
       };
     }
 
-    let department = acc[facultyName].departments.find(d => d.name === departmentName);
+    let department = acc[facultyName]?.departments?.find(d => d.name === departmentName);
     if (!department) {
       department = {
         name: departmentName,
         courses: [],
       };
-      acc[facultyName].departments.push(department);
+      acc[facultyName]?.departments?.push(department);
     }
 
     department.courses.push(course);

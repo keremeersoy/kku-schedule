@@ -6,7 +6,7 @@ import { z } from "zod";
 export const authRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({}))
-    .query(({ input }) => {
+    .query(({}) => {
       return {
         greeting: "Hello tRPC",
       };

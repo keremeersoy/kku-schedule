@@ -1,4 +1,3 @@
-import Link from "next/link";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 
 export default function Home() {

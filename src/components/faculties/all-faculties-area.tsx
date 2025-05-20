@@ -6,7 +6,6 @@ import { type Faculty } from '@/types';
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,

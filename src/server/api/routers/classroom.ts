@@ -36,7 +36,6 @@ export const classroomRouter = createTRPCRouter({
       },
     }) as ClassroomWithFaculty[];
 
-    // Group classrooms by faculty
     const groupedClassrooms = classrooms.reduce<Record<string, FacultyGroup>>((acc, classroom) => {
       const facultyId = classroom.faculty.id;
       if (!acc[facultyId]) {
@@ -45,7 +44,7 @@ export const classroomRouter = createTRPCRouter({
           classrooms: [],
         };
       }
-      acc[facultyId].classrooms.push(classroom);
+      acc[facultyId]?.classrooms?.push(classroom);
       return acc;
     }, {});
 
