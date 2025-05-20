@@ -185,8 +185,16 @@ export function AppSidebar() {
                 <SidebarMenuSub>
                   <SidebarMenuSubItem>
                     <SidebarMenuSubButton asChild>
-                      <Link href="/dashboard">
+                      <Link href="/dashboard/exam-schedules">
                         <FileText className="mr-2 h-4 w-4" />
+                        <span>Tüm Sınav Takvimleri</span>
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild>
+                      <Link href="/dashboard/exam-schedules/create">
+                        <ListPlus className="mr-2 h-4 w-4" />
                         <span>Sınav Takvimi Oluştur</span>
                       </Link>
                     </SidebarMenuSubButton>
