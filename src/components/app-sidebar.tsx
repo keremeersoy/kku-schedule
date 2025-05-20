@@ -15,6 +15,7 @@ import {
   } from "@/components/ui/sidebar";
 import { ListPlus, School, Folder, FileText, GraduationCap, User, LogOut, Moon, Sun, BookOpen, Building2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "./ui/button";
 import {
@@ -41,6 +42,15 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
+        <div className="flex justify-center items-center p-4 mb-2">
+          <Image
+            src="/images/kirikkale-univeristesi-logo.png"
+            alt="Kırıkkale Üniversitesi Logo"
+            width={60}
+            height={60}
+            priority
+          />
+        </div>
         <SidebarGroup>
           <SidebarGroupLabel>Fakülteler</SidebarGroupLabel>
           <SidebarGroupContent>
