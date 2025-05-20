@@ -11,6 +11,14 @@ const Navbar = () => {
           Kırıkkale Üniversitesi | Sınav Takvim
         </Link>
       </div>
+      <div className="flex items-center space-x-4">
+        <Link href="/login" className="rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground">
+          Giriş Yap
+        </Link>
+        <Link href="/register" className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          Kayıt Ol
+        </Link>
+      </div>
     </div>
   );
 };
