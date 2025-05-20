@@ -51,6 +51,18 @@ export const classroomRouter = createTRPCRouter({
     return Object.values(groupedClassrooms);
   }),
 
+  getClassroomsByFacultyId: protectedProcedure
+    .input(z.object({ facultyId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      if (!input.facultyId) {
+        return []; // Return empty array if no facultyId is provided
+      }
+      return ctx.db.classroom.findMany({
+        where: { facultyId: input.facultyId },
+        orderBy: { name: "asc" },
+      });
+    }),
+
   getClassroomById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {

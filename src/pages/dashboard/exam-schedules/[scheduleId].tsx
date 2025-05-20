@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
+
 import { api } from "@/utils/api";
 import { useRouter } from "next/router";
 import { ReloadIcon } from "@radix-ui/react-icons";

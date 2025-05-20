@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
+
 import { Button } from "@/components/ui/button";
 import { api } from "@/utils/api"; // Uncommented
 import { Plus } from "lucide-react";

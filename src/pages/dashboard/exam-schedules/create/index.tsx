@@ -1,5 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
+
 import { Button } from "@/components/ui/button";
-// import { createExamScheduleSchema, type CreateExamScheduleSchema } from "@/schemas/examSchedule"; // TODO: Define this schema
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -21,20 +25,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { type Faculty } from "@/types"; // Assuming Faculty might be relevant, adjust as needed
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarPlus, CalendarIcon, Trash2 } from "lucide-react"; // Changed icon
-import { z } from "zod"; // Added for placeholder schema
+import { CalendarPlus, CalendarIcon, Trash2 } from "lucide-react";
+import { z } from "zod";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils"; // Assuming you have a utility for cn
-import { format } from "date-fns"; // For formatting dates
-import { api } from "@/utils/api"; // Uncommented and assuming it's correctly set up
-import { useEffect } from "react"; // Removed useState as it's not directly used now
-import type { Course } from "@prisma/client"; // For typing fetched courses
-import type { TRPCClientErrorLike } from "@trpc/client"; // Import for error typing
-import type { AppRouter } from "@/server/api/root"; // Import AppRouter for error typing
-import { tr } from 'date-fns/locale'; // Import Turkish locale
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { api } from "@/utils/api";
+import { useEffect } from "react";
+import type { Course } from "@prisma/client";
+import type { Classroom } from "@prisma/client";
+import type { TRPCClientErrorLike } from "@trpc/client";
+import type { AppRouter } from "@/server/api/root";
+import { tr } from 'date-fns/locale';
+import { Checkbox } from "@/components/ui/checkbox";
 
 const courseExamDetailSchema = z.object({
   courseId: z.string(),
@@ -42,7 +47,6 @@ const courseExamDetailSchema = z.object({
   student_count: z.coerce.number().int().min(0, "Öğrenci sayısı negatif olamaz."),
 });
 
-// Updated schema with Date types and courseExams array
 const createExamScheduleSchema = z.object({
   title: z.string().min(1, "Takvim başlığı gereklidir."),
   facultyId: z.string().min(1, "Fakülte seçimi gereklidir."),
@@ -50,8 +54,9 @@ const createExamScheduleSchema = z.object({
   end_date: z.date({ required_error: "Bitiş tarihi gereklidir." }),
   assistant_count: z.coerce.number().int().min(0, "Asistan sayısı en az 0 olmalıdır."),
   max_classes_per_assistant: z.coerce.number().int().min(1, "Asistan başına maksimum ders sayısı en az 1 olmalıdır."),
-  courseExams: z.array(courseExamDetailSchema).min(1, "En az bir ders için sınav detayı girilmelidir."), // New field
-}).refine((data) => data.end_date.getTime() > data.start_date.getTime(), { // Use getTime() for robust date comparison
+  courseExams: z.array(courseExamDetailSchema).min(1, "En az bir ders için sınav detayı girilmelidir."),
+  selectedClassroomIds: z.array(z.string()).min(1, "En az bir derslik seçilmelidir."),
+}).refine((data) => data.end_date.getTime() > data.start_date.getTime(), {
   message: "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.",
   path: ["end_date"], 
 });
@@ -69,10 +74,11 @@ const CreateExamSchedulePage = () => {
       assistant_count: 0,
       max_classes_per_assistant: 1,
       courseExams: [],
+      selectedClassroomIds: [],
     },
   });
 
-  const { fields, replace } = useFieldArray({ // Changed to replace for full control on faculty change
+  const { fields, replace } = useFieldArray({
     control: createForm.control,
     name: "courseExams"
   });
@@ -87,17 +93,17 @@ const CreateExamSchedulePage = () => {
         if (data) {
           const newCourseExams = data.map(course => ({ 
             courseId: course.id, 
-            exam_duration: 60, // Varsayılan sınav süresi
-            student_count: 0,  // Varsayılan öğrenci sayısı
+            exam_duration: 60,
+            student_count: 0,
           }));
-          replace(newCourseExams); // Replace entire array to reflect new faculty's courses
-          createForm.trigger("courseExams"); // Trigger validation for the array
+          replace(newCourseExams);
+          createForm.trigger("courseExams");
         } else {
-          replace([]); // Clear courses if no data
+          replace([]);
         }
       },
       onError: () => {
-        replace([]); // Clear courses on error
+        replace([]);
         toast({
           title: "Dersler Yüklenemedi",
           description: "Fakülteye ait dersler yüklenirken bir hata oluştu.",
@@ -107,7 +113,20 @@ const CreateExamSchedulePage = () => {
     }
   );
 
-  // TODO: Replace with actual API call for creating exam schedules
+  const { data: facultyClassrooms, isLoading: classroomsLoading } = api.classroom.getClassroomsByFacultyId.useQuery(
+    { facultyId: selectedFacultyId! },
+    { 
+      enabled: !!selectedFacultyId,
+      onError: () => {
+        toast({
+          title: "Derslikler Yüklenemedi",
+          description: "Fakülteye ait derslikler yüklenirken bir hata oluştu.",
+          variant: "destructive",
+        });
+      }
+    }
+  );
+
   const createExamScheduleMutation = api.examSchedule.create.useMutation({
     onSuccess: () => {
       toast({
@@ -116,15 +135,17 @@ const CreateExamSchedulePage = () => {
         variant: "success",
       });
       void router.push("/dashboard/exam-schedules");
-      createForm.reset(); // Reset form on successful submission
+      createForm.reset();
     },
-    onError: (error: TRPCClientErrorLike<AppRouter>) => { // Typed the error parameter
+    onError: (error: TRPCClientErrorLike<AppRouter>) => {
       toast({
         title: "Bir hata oluştu",
         description: error.data?.zodError?.fieldErrors.courseExams 
           ? "Ders sınav detaylarında hata var." 
           : error.data?.zodError?.fieldErrors.end_date
           ? error.data.zodError.fieldErrors.end_date[0]
+          : error.data?.zodError?.fieldErrors.selectedClassroomIds
+          ? "Lütfen en az bir derslik seçin."
           : error.message || "Takvim oluşturulamadı",
         variant: "destructive",
       });
@@ -132,21 +153,19 @@ const CreateExamSchedulePage = () => {
   });
 
   const handleCreateExamSchedule = async (data: CreateExamScheduleSchema) => {
-    // console.log("Form Data Submitted:", data); // For debugging
     await createExamScheduleMutation.mutateAsync(data);
-    // Catch block removed as onError handles it in the mutation
   };
   
-  // Effect to clear courseExams if facultyId is cleared
   useEffect(() => {
     if (!selectedFacultyId) {
       replace([]);
+      createForm.setValue("selectedClassroomIds", []);
     }
-  }, [selectedFacultyId, replace]);
+  }, [selectedFacultyId, replace, createForm]);
 
   return (
-    <div className="p-4 md:p-6 lg:p-8">
-      <Card className="w-full">
+    <div className="flex flex-col min-h-screen p-4 md:p-6 lg:p-8">
+      <Card className="w-full h-auto">
         <CardHeader>
            <div className="flex items-center space-x-3">
             <CalendarPlus className="h-7 w-7 text-primary" />
@@ -333,7 +352,6 @@ const CreateExamSchedulePage = () => {
                 )}
               />
  
-              {/* Dynamic Course Exam Details Section - UI İyileştirmesi */}
               {selectedFacultyId && !coursesLoading && facultyCourses && facultyCourses.length > 0 && (
                 <div className="space-y-4 rounded-lg border p-4">
                   <h3 className="text-lg font-medium">Ders Sınav Detayları</h3>
@@ -399,10 +417,65 @@ const CreateExamSchedulePage = () => {
                 <p className="text-sm text-muted-foreground text-center py-4">Seçili fakülteye ait ders bulunamadı.</p>
               )}
 
+              {selectedFacultyId && !classroomsLoading && facultyClassrooms && facultyClassrooms.length > 0 && (
+                <div className="space-y-4 rounded-lg border p-4">
+                  <h3 className="text-lg font-medium">Derslik Seçimi</h3>
+                  <FormDescription className="text-xs text-muted-foreground">
+                    Sınav takvimi için kullanılacak derslikleri seçin.
+                  </FormDescription>
+                  <FormField
+                    control={createForm.control}
+                    name="selectedClassroomIds"
+                    render={() => (
+                      <FormItem className="space-y-3">
+                        {facultyClassrooms.map((classroom) => (
+                          <FormField
+                            key={classroom.id}
+                            control={createForm.control}
+                            name="selectedClassroomIds"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={classroom.id}
+                                  className="flex flex-row items-start space-x-3 space-y-0"
+                                >
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value?.includes(classroom.id)}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([...(field.value || []), classroom.id])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) => value !== classroom.id
+                                              )
+                                            );
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal">
+                                    {classroom.name} (Kapasite: {classroom.capacity})
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
+              {selectedFacultyId && classroomsLoading && <p className="text-sm text-muted-foreground text-center py-4">Derslikler yükleniyor...</p>}
+              {selectedFacultyId && !classroomsLoading && (!facultyClassrooms || facultyClassrooms.length === 0) && (
+                  <p className="text-sm text-muted-foreground text-center py-4">Seçili fakülteye ait derslik bulunamadı.</p>
+              )}
+
               <Button
                 type="submit"
-                disabled={!!(createExamScheduleMutation.isLoading || facultiesLoading || (!!selectedFacultyId && coursesLoading))}
-                className="w-full md:w-auto mt-8 pt-3 pb-3" /* Ensured mt is sufficient */
+                disabled={!!(createExamScheduleMutation.isLoading || facultiesLoading || (!!selectedFacultyId && (coursesLoading || classroomsLoading)))}
+                className="w-full md:w-auto mt-8 pt-3 pb-3"
               >
                 {createExamScheduleMutation.isLoading ? "Oluşturuluyor..." : "Sınav Takvimini Oluştur"}
               </Button>

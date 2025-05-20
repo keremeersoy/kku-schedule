@@ -18,6 +18,7 @@ const createExamScheduleSchemaForRouter = z.object({
   assistant_count: z.coerce.number().int().min(0),
   max_classes_per_assistant: z.coerce.number().int().min(1),
   courseExams: z.array(courseExamDetailSchemaForRouter).min(1),
+  selectedClassroomIds: z.array(z.string()).min(1, "En az bir derslik seçilmelidir."),
 }).refine((data) => data.end_date > data.start_date, {
   message: "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.",
   path: ["end_date"], 
@@ -27,7 +28,7 @@ export const examScheduleRouter = createTRPCRouter({
   create: protectedProcedure
     .input(createExamScheduleSchemaForRouter) // Use the defined Zod schema
     .mutation(async ({ ctx, input }) => {
-      const { facultyId, title, start_date, end_date, assistant_count, max_classes_per_assistant, courseExams } = input;
+      const { facultyId, title, start_date, end_date, assistant_count, max_classes_per_assistant, courseExams, selectedClassroomIds } = input;
 
       const newExamSchedule = await ctx.db.$transaction(async (prisma) => {
         const schedule = await prisma.examSchedule.create({
@@ -51,6 +52,17 @@ export const examScheduleRouter = createTRPCRouter({
             })),
           });
         }
+
+        // Create ExamScheduleClassroom entries
+        if (selectedClassroomIds && selectedClassroomIds.length > 0) {
+          await prisma.examScheduleClassroom.createMany({
+            data: selectedClassroomIds.map(classroomId => ({
+              examScheduleId: schedule.id,
+              classroomId: classroomId,
+            })),
+          });
+        }
+
         return schedule; // Return the created schedule object
       });
       return newExamSchedule;
